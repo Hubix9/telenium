@@ -106,6 +106,17 @@ def rpc_getattr(selector, key):
         return getattr(widget, key)
 
 
+def rpc_multi_getattr(selector, keys):
+    widget = selectFirst(selector)
+    if not widget:
+        return
+    attributes = []
+    for key in keys:
+        attributes.append(getattr(widget, key))
+
+    return attributes
+
+
 def path_to(widget):
     from kivy.core.window import Window
     root = Window
@@ -188,7 +199,7 @@ def _highlight(results):
         Color(1, 0, 0, 0.5)
         for widget, bounds in results:
             left, bottom, right, top = bounds
-            Rectangle(pos=(left, bottom), size=(right-left, top-bottom))
+            Rectangle(pos=(left, bottom), size=(right - left, top - bottom))
 
 
 @kivythread
@@ -207,6 +218,7 @@ def rpc_element(selector):
 
 
 idmap = {}
+
 
 @kivythread
 def rpc_execute(cmd):
@@ -465,6 +477,7 @@ def run_telenium():
     dispatcher.add_method(rpc_select, "select")
     dispatcher.add_method(rpc_highlight, "highlight")
     dispatcher.add_method(rpc_getattr, "getattr")
+    dispatcher.add_method(rpc_multi_getattr, "multi_getattr")
     dispatcher.add_method(rpc_setattr, "setattr")
     dispatcher.add_method(rpc_element, "element")
     dispatcher.add_method(rpc_execute, "execute")
